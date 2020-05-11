@@ -22,21 +22,8 @@ public class Writer {
     private long id;
     @Column(name = "fullname")
     private String fullName;
-    @Column(name="birthday")
+    @Column(name = "birthday")
     private String birthday;
-
-
-    public long getId() {
-        return id;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public String getBirthday() {
-        return birthday;
-    }
 
     @Override
     public String toString() {

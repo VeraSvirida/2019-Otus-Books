@@ -36,7 +36,7 @@ public class Book {
     @OneToOne(targetEntity = Writer.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "writer_id")
     private Writer writer;
-    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Comment> comment;
 
     @Override

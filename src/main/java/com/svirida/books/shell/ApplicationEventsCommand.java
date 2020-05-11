@@ -26,27 +26,28 @@ public class ApplicationEventsCommand {
 
     //Показать по Id
     @ShellMethod(value = "getBookByIdBook", key = {"bGetById"})
-    public void getById(@ShellOption(defaultValue = "1") int id) {
-        Optional<Book> book = bookRepositoryJpa.getById(id);
+    public void getById(@ShellOption(defaultValue = "1") long id) {
+        Optional<Book> book = bookRepositoryJpa.findById(id);
         System.out.println(book.toString());
     }
 
     // получить все
     @ShellMethod(value = "getAllBook", key = {"bGetAll"})
     public void getAll() {
-        for (Book allBook : bookRepositoryJpa.getAll()) {
+        for (Book allBook : bookRepositoryJpa.findAll()) {
             System.out.println(allBook.toString());
         }
     }
 
     //Добавить новый
     @ShellMethod(value = "addBook", key = {"bAdd"})
-    public void add(@ShellOption Long id, @ShellOption String title, @ShellOption String description, @ShellOption Long genreId, @ShellOption Long writerId) {
-        Book bookInsert = new Book(id, title, description, genreRepositoryJpa.getById(genreId).get(), writerRepositoryJpa.getById(writerId).get(), null);
+    public void add(@ShellOption Long id, @ShellOption String title, @ShellOption String description, @ShellOption long genreId, @ShellOption Long writerId) {
+        Book bookInsert = new Book(id, title, description, genreRepositoryJpa.findById(genreId).get(), writerRepositoryJpa.findById(writerId).get(), null);
         bookRepositoryJpa.save(bookInsert);
     }
 
     //Удалить
+    @Transactional
     @ShellMethod(value = "deleteBook", key = {"bDel"})
     public void delete(@ShellOption long id) {
         bookRepositoryJpa.deleteById(id);
@@ -54,26 +55,27 @@ public class ApplicationEventsCommand {
 
     //Обновить
     @ShellMethod(value = "updateDescriptionOfBook", key = {"bUpd"})
-    public void update(@ShellOption int id, @ShellOption String description) {
-        bookRepositoryJpa.updateDescriptionByIb(id, description);
+    public void update(@ShellOption long id, @ShellOption String description) {
+        Optional<Book> updBook = bookRepositoryJpa.findById(id);
+        if (updBook.isPresent()) {
+            updBook.get().setDescription(description);
+            bookRepositoryJpa.save(updBook.get());
+        }
     }
 
     //Показать все комментарии по книге
     @Transactional
     @ShellMethod(value = "getAllCommentByIdBook", key = {"cGetAll"})
-    public void showComment(@ShellOption int id) {
-        Optional<Book> book = bookRepositoryJpa.getById(id);
-        if (book.isPresent()) {
-            for (Comment comment : book.get().getComment()) {
-                System.out.println(comment.toString());
-            }
+    public void showComment(@ShellOption long id) {
+        for (Comment comment : bookRepositoryJpa.findById(id).get().getComment()) {
+            System.out.println(comment);
         }
     }
 
     //Добавить комментарий к книге
     @ShellMethod(value = "addComment", key = {"cAdd"})
-    public void addComment(@ShellOption int id, @ShellOption String comment, @ShellOption int bookId) {
-        Comment newComment = new Comment(id, comment, bookRepositoryJpa.getById(bookId).get());
+    public void addComment(@ShellOption int id, @ShellOption String comment, @ShellOption long bookId) {
+        Comment newComment = new Comment(id, comment, bookRepositoryJpa.findById(bookId).get());
         commentRepositoryJpa.save(newComment);
     }
 
