@@ -34,20 +34,20 @@ public class ApplicationEventsCommand {
     @ShellMethod(value = "getAllBook", key = {"bGetAll"})
     public void getAll() {
         for (Book allBook : bookRepositoryJpa.getAll()) {
-            System.out.println(allBook);
+            System.out.println(allBook.toString());
         }
     }
 
     //Добавить новый
     @ShellMethod(value = "addBook", key = {"bAdd"})
     public void add(@ShellOption Long id, @ShellOption String title, @ShellOption String description, @ShellOption Long genreId, @ShellOption Long writerId) {
-        Book bookInsert = new Book(id, title, description, genreRepositoryJpa.getById(genreId).get(), writerRepositoryJpa.getById(writerId).get());
+        Book bookInsert = new Book(id, title, description, genreRepositoryJpa.getById(genreId).get(), writerRepositoryJpa.getById(writerId).get(), null);
         bookRepositoryJpa.save(bookInsert);
     }
 
     //Удалить
     @ShellMethod(value = "deleteBook", key = {"bDel"})
-    public void delete(@ShellOption int id) {
+    public void delete(@ShellOption long id) {
         bookRepositoryJpa.deleteById(id);
     }
 
@@ -60,8 +60,11 @@ public class ApplicationEventsCommand {
     //Показать все комментарии по книге
     @ShellMethod(value = "getAllCommentByIdBook", key = {"cGetAll"})
     public void showComment(@ShellOption int id) {
-        for (Comment allComment : commentRepositoryJpa.getAllByBookId(id)) {
-            System.out.println(allComment);
+        Optional<Book> book = bookRepositoryJpa.getById(id);
+        if (book.isPresent()) {
+            for (Comment comment : book.get().getComment()) {
+                System.out.println(comment.toString());
+            }
         }
     }
 

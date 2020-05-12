@@ -8,6 +8,7 @@ import lombok.ToString;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,7 +16,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-@ToString
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,7 +27,7 @@ public class Comment {
     private long id;
     @Column(name = "comment")
     private String comment;
-    @OneToOne(targetEntity = Book.class, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "book_id")
     private Book book;
 
@@ -53,5 +53,13 @@ public class Comment {
 
     public void setBook(Book book) {
         this.book = book;
+    }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id=" + id +
+                ", comment='" + comment + '\'' +
+                '}';
     }
 }

@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Import(BookRepositoryJpaImpl.class)
 public class BookRepositoryJpaImplTest {
 
-    private static final long FIRST_BOOK_ID = 3L;
+    private static final int FIRST_BOOK_ID = 3;
     private static final int EXPECTED_NUMBER_OF_BOOKS = 6;
     private static final int EXPECTED_QUERIES_COUNT = 13;
     private static final String BOOK_TITLE = "Title";
@@ -65,7 +65,7 @@ public class BookRepositoryJpaImplTest {
         val genre = new Genre(7, "genre7");
         val writer = new Writer(7, "Writer7", "30.10.1989");
 
-        val book = new Book(7, BOOK_TITLE, BOOK_DESC, genre, writer);
+        val book = new Book(7, BOOK_TITLE, BOOK_DESC, genre, writer,null);
         repositoryJpa.save(book);
         assertThat(book.getId()).isGreaterThan(0);
 

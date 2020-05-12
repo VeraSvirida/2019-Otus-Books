@@ -23,13 +23,6 @@ public class CommentRepositoryJpaImp implements CommentRepositoryJpa {
     }
 
     @Override
-    public List<Comment> getAllByBookId(long bookId) {
-        TypedQuery<Comment> query = em.createQuery("select c from Comment c where c.book.id = :bookId", Comment.class);
-        query.setParameter("bookId", bookId);
-        return query.getResultList();
-    }
-
-    @Override
     public Comment save(Comment comment) {
         if (comment.getId() <= 0) {
             em.persist(comment);

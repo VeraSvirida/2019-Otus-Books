@@ -6,12 +6,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
-@Transactional
 @Repository
 public class BookRepositoryJpaImpl implements BookRepositoryJpa {
 
@@ -27,7 +25,6 @@ public class BookRepositoryJpaImpl implements BookRepositoryJpa {
             return em.merge(book);
         }
     }
-
     @Override
     public Optional<Book> getById(long id) {
         return Optional.ofNullable(em.find(Book.class, id));
@@ -39,27 +36,18 @@ public class BookRepositoryJpaImpl implements BookRepositoryJpa {
         return query.getResultList();
     }
 
+    @Transactional
     @Override
     public void deleteById(long id) {
-        Query query = em.createQuery("delete " +
-                "from Book b " +
-                "where b.id = :id");
-        query.setParameter("id", id);
-        query.executeUpdate();
+        Book delBook = em.find(Book.class, id);
+        em.remove(delBook);
     }
 
+    @Transactional
     @Override
     public void updateDescriptionByIb(long id, String description) {
-        Query query = em.createQuery("update Book b " +
-                "set b.description = : description " +
-                "where b.id = :id");
-        query.setParameter("description", description);
-        query.setParameter("id", id);
-        query.executeUpdate();
-    }
-
-    @Override
-    public int count() {
-        return em.createQuery("select count(b) from Book b").getFirstResult();
+        Book updBook = em.find(Book.class, id);
+        updBook.setDescription(description);
+        em.merge(updBook);
     }
 }

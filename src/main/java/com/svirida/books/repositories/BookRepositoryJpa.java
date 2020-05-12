@@ -15,6 +15,4 @@ public interface BookRepositoryJpa {
     void deleteById(long id);
 
     void updateDescriptionByIb(long id, String description);
-
-    int count();
 }

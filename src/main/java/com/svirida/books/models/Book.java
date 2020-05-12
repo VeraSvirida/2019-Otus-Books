@@ -3,19 +3,20 @@ package com.svirida.books.models;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.util.List;
 
-@ToString
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -35,44 +36,17 @@ public class Book {
     @OneToOne(targetEntity = Writer.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "writer_id")
     private Writer writer;
+    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)
+    private List<Comment> comment;
 
-    public long getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public Genre getGenre() {
-        return genre;
-    }
-
-    public Writer getWriter() {
-        return writer;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setGenre(Genre genre) {
-        this.genre = genre;
-    }
-
-    public void setWriter(Writer writer) {
-        this.writer = writer;
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", genre=" + genre +
+                ", writer=" + writer +
+                '}';
     }
 }
