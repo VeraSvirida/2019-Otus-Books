@@ -15,3 +15,6 @@ insert into books (id, title, description, writer_id, genre_id) values (2, 'Мц
 insert into books (id, title, description, writer_id, genre_id) values (3, 'Война и Мир',
 'Роман-эпопея, описывающий русское общество в эпоху войн против Наполеона в 1805 — 1812 годах',
 3,3);
+insert into comments (id, comment, book_id) values (1, 'good', 1);
+insert into comments (id, comment, book_id) values (2, 'not bad', 2);
+insert into comments (id, comment, book_id) values (3, 'so so', 1);

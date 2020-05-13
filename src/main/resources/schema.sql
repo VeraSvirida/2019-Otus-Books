@@ -18,4 +18,10 @@ create table books(
     genre_id bigint references genres (id),
     primary key (id)
 );
+create table comments(
+    id bigserial,
+    comment varchar(300),
+    book_id bigint references books (id),
+    primary key (id)
+);
 
