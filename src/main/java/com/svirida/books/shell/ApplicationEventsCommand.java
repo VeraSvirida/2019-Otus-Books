@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -58,6 +59,7 @@ public class ApplicationEventsCommand {
     }
 
     //Показать все комментарии по книге
+    @Transactional
     @ShellMethod(value = "getAllCommentByIdBook", key = {"cGetAll"})
     public void showComment(@ShellOption int id) {
         Optional<Book> book = bookRepositoryJpa.getById(id);
