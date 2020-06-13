@@ -1,8 +1,10 @@
 package com.svirida.books.repositories;
 
 import com.svirida.books.models.Book;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.transaction.annotation.Transactional;
 
-public interface BookRepositoryJpa extends JpaRepository<Book, Long> {
+@Transactional
+public interface BookRepositoryJpa extends CrudRepository<Book, Long> {
 
 }
