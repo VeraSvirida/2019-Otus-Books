@@ -1,9 +1,8 @@
 package com.svirida.books.repositories;
 
 import com.svirida.books.models.Writer;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
+public interface WriterRepositoryJpa extends JpaRepository<Writer, Long> {
 
-public interface WriterRepositoryJpa {
-    Optional<Writer> getById(long id);
 }

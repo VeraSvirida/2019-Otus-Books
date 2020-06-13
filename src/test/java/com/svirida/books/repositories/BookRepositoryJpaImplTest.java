@@ -13,20 +13,20 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
+//Понимаю что тестировать Spring Data Jpa нет смысла, но оставлю пока эти тесты здесь.
 @DisplayName("Репозиторий на основе Jpa для работы с книгами")
 @DataJpaTest
-@Import(BookRepositoryJpaImpl.class)
+@Import(BookRepositoryJpa.class)
 public class BookRepositoryJpaImplTest {
 
-    private static final int FIRST_BOOK_ID = 3;
+    private static final long FIRST_BOOK_ID = 3;
     private static final int EXPECTED_NUMBER_OF_BOOKS = 6;
     private static final int EXPECTED_QUERIES_COUNT = 13;
     private static final String BOOK_TITLE = "Title";
     private static final String BOOK_DESC = "Description";
 
     @Autowired
-    private BookRepositoryJpaImpl repositoryJpa;
+    private BookRepositoryJpa repositoryJpa;
 
     @Autowired
     private TestEntityManager em;
@@ -34,7 +34,7 @@ public class BookRepositoryJpaImplTest {
     @DisplayName("Должен загружать информацию о книге по Id")
     @Test
     void shouldFindExpectedStudentById() {
-        val optionalActualBook = repositoryJpa.getById(FIRST_BOOK_ID);
+        val optionalActualBook = repositoryJpa.findById(FIRST_BOOK_ID);
         val expectedBook = em.find(Book.class, FIRST_BOOK_ID);
         assertThat(optionalActualBook).isPresent().get()
                 .isEqualToComparingFieldByField(expectedBook);
@@ -49,7 +49,7 @@ public class BookRepositoryJpaImplTest {
 
 
         System.out.println("\n\n\n\n----------------------------------------------------------------------------------------------------------");
-        val students = repositoryJpa.getAll();
+        val students = repositoryJpa.findAll();
         assertThat(students).isNotNull().hasSize(EXPECTED_NUMBER_OF_BOOKS)
                 .allMatch(s -> !s.getDescription().equals(""))
                 .allMatch(s -> !s.getTitle().equals(""))
