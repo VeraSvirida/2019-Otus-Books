@@ -4,9 +4,8 @@ import com.svirida.books.models.Book;
 import com.svirida.books.models.Comment;
 import com.svirida.books.repositories.BookRepositoryJpa;
 import com.svirida.books.repositories.CommentRepositoryJpa;
-import com.svirida.books.repositories.GenreRepositoryJpa;
-import com.svirida.books.repositories.WriterRepositoryJpa;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -17,10 +16,9 @@ import java.util.Optional;
 @ShellComponent
 @RequiredArgsConstructor
 public class ApplicationEventsCommand {
-
+    @SuppressWarnings("SpringJavaAutowiredFieldsWarningInspection")
+    @Autowired
     private final BookRepositoryJpa bookRepositoryJpa;
-    private final GenreRepositoryJpa genreRepositoryJpa;
-    private final WriterRepositoryJpa writerRepositoryJpa;
     private final CommentRepositoryJpa commentRepositoryJpa;
 
 
@@ -41,8 +39,8 @@ public class ApplicationEventsCommand {
 
     //Добавить новый
     @ShellMethod(value = "addBook", key = {"bAdd"})
-    public void add(@ShellOption Long id, @ShellOption String title, @ShellOption String description, @ShellOption long genreId, @ShellOption Long writerId) {
-        Book bookInsert = new Book(id, title, description, genreRepositoryJpa.findById(genreId).get(), writerRepositoryJpa.findById(writerId).get(), null);
+    public void add(@ShellOption Long id, @ShellOption String title, @ShellOption String description, @ShellOption String genre, @ShellOption String writer) {
+        Book bookInsert = new Book(id, title, description, genre, writer, null);
         bookRepositoryJpa.save(bookInsert);
     }
 
@@ -67,16 +65,24 @@ public class ApplicationEventsCommand {
     @Transactional
     @ShellMethod(value = "getAllCommentByIdBook", key = {"cGetAll"})
     public void showComment(@ShellOption long id) {
-        for (Comment comment : bookRepositoryJpa.findById(id).get().getComment()) {
-            System.out.println(comment);
+        Optional<Book> optionalBook = bookRepositoryJpa.findById(id);
+        if (optionalBook.isPresent()) {
+            Book book = optionalBook.get();
+            for (Comment comment : commentRepositoryJpa.findByBook(book)) {
+                System.out.println(comment);
+            }
         }
     }
 
     //Добавить комментарий к книге
     @ShellMethod(value = "addComment", key = {"cAdd"})
-    public void addComment(@ShellOption int id, @ShellOption String comment, @ShellOption long bookId) {
-        Comment newComment = new Comment(id, comment, bookRepositoryJpa.findById(bookId).get());
-        commentRepositoryJpa.save(newComment);
+    public void addComment(@ShellOption Long id, @ShellOption String comment, @ShellOption long bookId) {
+        final Optional<Book> optionalBook = bookRepositoryJpa.findById(bookId);
+        if (optionalBook.isPresent()) {
+            Book book = optionalBook.get();
+            final Comment newComment = new Comment(id, comment, book);
+            commentRepositoryJpa.save(newComment);
+        }
     }
 
     //Удалить комментарий к книге
