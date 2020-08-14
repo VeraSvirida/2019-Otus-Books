@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Books</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        .books, .books td {
+            border: 1px solid lightgray;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+<h1>BOOKS:</h1>
+
+<table class="books">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Genre</th>
+        <th>Writer</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book : ${books}">
+        <td th:text="${book.id}">1</td>
+        <td th:text="${book.title}">Books Title</td>
+        <td th:text="${book.description}">Books description</td>
+        <td th:text="${book.genre}">Genree</td>
+        <td th:text="${book.writer}">Writer</td>
+        <td>
+            <a th:href="@{/book/edit(id=${book.id})}" href="editBook.html">Edit</a>
+            <a th:href="@{/book/delete(id=${book.id})}" href="editBook.html">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<form id="edit-form" th:action="@{/book/add(id=${newBook.id})}" th:method="post" action="listBook.html">
+    <h1>Add new book:</h1>
+
+    <div class="row">
+        <label for="holder-input">ID:</label>
+        <input id="holder-input" name="id" type="long" th:value="${newBook.id}" value="1"/>
+    </div>
+
+    <div class="row">
+        <label for="holder-input">Title:</label>
+        <input id="holder-input" name="title" type="text" th:value="${newBook.title}" value="title"/>
+    </div>
+    <div class="row">
+        <label for="holder-input">Description:</label>
+        <input id="holder-input" name="description" type="text" th:value="${newBook.description}" value="description"/>
+    </div>
+    <div class="row">
+        <label for="holder-input">Genre:</label>
+        <input id="holder-input" name="genre" type="text" th:value="${newBook.genre}" value="genre"/>
+    </div>
+    <div class="row">
+        <label for="holder-input">Writer:</label>
+        <input id="holder-input" name="writer" type="text" th:value="${newBook.writer}" value="writer"/>
+    </div>
+    <div class="row">
+        <button type="submit">Save</button>
+    </div>
+</form>
+
+</body>
+</html>

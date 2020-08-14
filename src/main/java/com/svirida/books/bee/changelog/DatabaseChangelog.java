@@ -17,7 +17,6 @@ public class DatabaseChangelog {
         doc.append("genre", "genre1");
         doc.append("writer", "writer1");
         myCollection.insert(doc);
-//        myCollection=db.getCollection("genre");
         BasicDBObject doc1 = new BasicDBObject().append("_id", 2L);
         doc1.append("title", "Book2");
         doc1.append("description", "description2");
