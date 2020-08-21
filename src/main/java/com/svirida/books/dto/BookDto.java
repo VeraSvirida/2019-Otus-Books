@@ -19,6 +19,7 @@ public class BookDto {
     private String genre;
     private String writer;
     private List<Comment> comment;
+
     public static BookDto toDto(Book book) {
         return new BookDto(book.getId(), book.getTitle(), book.getDescription(),
                 book.getGenre(), book.getWriter(), book.getComment());

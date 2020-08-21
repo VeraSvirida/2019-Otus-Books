@@ -21,52 +21,18 @@ public class BookController {
         this.bookRepositoryJpa = bookRepositoryJpa;
     }
 
-    @GetMapping("/book")
+    @GetMapping("/")
     public String listBook(Model model) {
-        List<BookDto> books = bookRepositoryJpa.findAll().stream()
-                .map(BookDto::toDto)
-                .collect(Collectors.toList());
-        Book newBook = new Book();
-        model.addAttribute("books", books);
-        model.addAttribute("newBook", newBook);
         return "listBook";
     }
 
     @GetMapping("/book/edit")
     public String editBook(@RequestParam("id") long id, Model model) {
-        Book book = bookRepositoryJpa.findById(id).orElseThrow(NotFoundException::new);
-        model.addAttribute("book", book);
-        return "editBook";
-    }
-
-    @PostMapping("/book/add")
-    public String saveBook(Book book, Model model) {
-        Book saved = bookRepositoryJpa.save(book);
-        List<BookDto> books = bookRepositoryJpa.findAll().stream()
-                .map(BookDto::toDto)
-                .collect(Collectors.toList());
-        Book newBook = new Book();
-        model.addAttribute("books", books);
-        model.addAttribute("newBook", newBook);
-        return "listBook";
-    }
-
-    @PostMapping("/book/edit")
-    public String addBook(Book book, Model model) {
-        Book saved = bookRepositoryJpa.save(book);
-        model.addAttribute((saved));
         return "editBook";
     }
 
     @GetMapping("/book/delete")
     public String deleteBook(@RequestParam("id") long id, Model model) {
-        bookRepositoryJpa.deleteById(id);
-        List<BookDto> books = bookRepositoryJpa.findAll().stream()
-                .map(BookDto::toDto)
-                .collect(Collectors.toList());
-        Book newBook = new Book();
-        model.addAttribute("books", books);
-        model.addAttribute("newBook", newBook);
         return "listBook";
     }
 }

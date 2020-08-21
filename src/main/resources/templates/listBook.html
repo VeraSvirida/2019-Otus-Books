@@ -13,6 +13,7 @@
             padding: 5px;
         }
     </style>
+    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
 <h1>BOOKS:</h1>
@@ -29,47 +30,88 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="book : ${books}">
-        <td th:text="${book.id}">1</td>
-        <td th:text="${book.title}">Books Title</td>
-        <td th:text="${book.description}">Books description</td>
-        <td th:text="${book.genre}">Genree</td>
-        <td th:text="${book.writer}">Writer</td>
-        <td>
-            <a th:href="@{/book/edit(id=${book.id})}" href="editBook.html">Edit</a>
-            <a th:href="@{/book/delete(id=${book.id})}" href="editBook.html">Delete</a>
-        </td>
-    </tr>
     </tbody>
 </table>
-<form id="edit-form" th:action="@{/book/add(id=${newBook.id})}" th:method="post" action="listBook.html">
+<form id="addBook">
     <h1>Add new book:</h1>
 
     <div class="row">
-        <label for="holder-input">ID:</label>
-        <input id="holder-input" name="id" type="long" th:value="${newBook.id}" value="1"/>
+        <label for="id">ID:</label>
+        <input id="id" name="id" type="long" value="1"/>
     </div>
 
     <div class="row">
-        <label for="holder-input">Title:</label>
-        <input id="holder-input" name="title" type="text" th:value="${newBook.title}" value="title"/>
+        <label for="title">Title:</label>
+        <input id="title" name ="title" type="text" value="title"/>
     </div>
     <div class="row">
-        <label for="holder-input">Description:</label>
-        <input id="holder-input" name="description" type="text" th:value="${newBook.description}" value="description"/>
+        <label for="description">Description:</label>
+        <input id="description" name ="description" type="text" value="description"/>
     </div>
     <div class="row">
-        <label for="holder-input">Genre:</label>
-        <input id="holder-input" name="genre" type="text" th:value="${newBook.genre}" value="genre"/>
+        <label for="genre">Genre:</label>
+        <input id="genre" name ="genre" type="text" value="genre"/>
     </div>
     <div class="row">
-        <label for="holder-input">Writer:</label>
-        <input id="holder-input" name="writer" type="text" th:value="${newBook.writer}" value="writer"/>
+        <label for="writer">Writer:</label>
+        <input id="writer" name ="writer" type="text" value="writer"/>
     </div>
     <div class="row">
-        <button type="submit">Save</button>
+        <button id="save" type="submit">Save</button>
     </div>
 </form>
+<script>
+    $(function () {
+        $.get('/api/books').done(function (books) {
+            books.forEach(function (book) {
+                $('tbody').append(`
+                 <tr>
+                     <td>${book.id}</td>
+                     <td>${book.title}</td>
+                     <td>${book.description}</td>
+                     <td>${book.genre}</td>
+                     <td>${book.writer}</td>
+                     <td>
+                         <a th:href="@{/book/edit(id=${book.id})}" href="editBook.html">Edit</a>
+                         <a th:href="@{/book/delete(id=${book.id})}" href="editBook.html">Delete</a>
+                     </td>
+                 </tr>
+             `)
+            });
+        })
+    });
+    $( document ).ready(function() {
 
+        // SUBMIT FORM
+        $("#addBook").submit(function (event) {
+            // Prevent the form from submitting via the browser.
+            event.preventDefault();
+            doAjaxPost();
+        });
+
+        function doAjaxPost() {
+            var formData = {
+                "id": $("#id").val(),
+                "title": $("#title").val(),
+                "description": $("#description").val(),
+                "genre": $("#genre").val(),
+                "writer": $("#writer").val()
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/api/books/add",
+                data: JSON.stringify(formData),
+                contentType:formData,
+                success: function (response) {
+                    console.log(" Successfull");
+                },
+                error: function (e) {
+                    console.log(" Error:" + e);
+                }
+            });
+        }
+    })
+</script>
 </body>
 </html>
